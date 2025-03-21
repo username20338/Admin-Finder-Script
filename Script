@@ -1,0 +1,109 @@
+-- Carregar a Library da Interface Gamer UI
+local FinderAdmin = loadstring(game:HttpGet("https://raw.githubusercontent.com/username20338/Admin-Finder-Script/refs/heads/main/libraryUI"))()
+
+-- Função para inicializar a interface
+FinderAdmin:Initialize({
+    Title = "Finder Admin - Blox Fruits",
+    BackgroundColor = Color3.fromRGB(0, 0, 0),  -- Cor de fundo escura
+    ButtonColor = Color3.fromRGB(0, 0, 255),  -- Cor do botão (azul vibrante)
+    TextColor = Color3.fromRGB(255, 255, 255), -- Cor do texto (branco)
+    Font = Enum.Font.SourceSansBold,  -- Fonte dos textos
+    ButtonSize = UDim2.new(0, 200, 0, 50), -- Tamanho dos botões
+})
+
+-- Função de Feedback
+local feedbackLabel = Instance.new("TextLabel")
+feedbackLabel.Size = UDim2.new(0, 300, 0, 50)
+feedbackLabel.Position = UDim2.new(0.5, -150, 0.8, 0)
+feedbackLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)  -- Cor de fundo do feedback
+feedbackLabel.TextColor3 = Color3.fromRGB(255, 255, 255) -- Cor do texto do feedback
+feedbackLabel.TextScaled = true  -- Ajustar o texto para caber na área do label
+feedbackLabel.Text = "Aguardando ação..."  -- Texto inicial de feedback
+feedbackLabel.Parent = FinderAdmin:GetScreenGui()
+
+-- Função para atualizar o feedback
+local function updateFeedback(text, color)
+    feedbackLabel.Text = text  -- Atualiza o texto do feedback
+    feedbackLabel.TextColor3 = color  -- Atualiza a cor do texto do feedback
+end
+
+-- Função para obter servidores com administradores no Blox Fruits
+function getBloxFruitsAdminServers()
+    -- Aqui você pode implementar a lógica para buscar servidores com administradores do Blox Fruits
+    -- Para fins de exemplo, estamos usando uma lista fictícia de servidores.
+    return {
+        {Id = 12345678},  -- Exemplo de ID do servidor
+    }
+end
+
+-- Função para teleportar para um servidor com administradores
+function teleportToAdminServer()
+    local adminServers = getBloxFruitsAdminServers()  -- Buscar servidores com administradores
+    if #adminServers > 0 then
+        local serverToTeleport = adminServers[1]  -- Escolher o primeiro servidor
+        game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, serverToTeleport.Id, game.Players.LocalPlayer)
+        updateFeedback("Teleportando para servidor com administradores...", Color3.fromRGB(0, 255, 0))  -- Feedback verde (sucesso)
+    else
+        updateFeedback("Nenhum servidor com administradores encontrado.", Color3.fromRGB(255, 0, 0))  -- Feedback vermelho (erro)
+    end
+end
+
+-- Função para mudar a velocidade (WalkSpeed)
+function changeWalkSpeed(speed)
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = speed
+    updateFeedback("Velocidade alterada para: " .. speed, Color3.fromRGB(0, 255, 0))  -- Feedback verde (sucesso)
+end
+
+-- Função para ativar/desativar God Mode
+function toggleGodMode()
+    -- Aqui você pode implementar a lógica para ativar/desativar o God Mode (imunidade a danos)
+    local player = game.Players.LocalPlayer
+    local humanoid = player.Character and player.Character:FindFirstChild("Humanoid")
+    
+    if humanoid then
+        humanoid.Health = humanoid.Health == humanoid.MaxHealth and humanoid.Health or humanoid.MaxHealth
+        updateFeedback("God Mode ativado!", Color3.fromRGB(0, 255, 0))  -- Feedback verde (sucesso)
+    else
+        updateFeedback("Falha ao ativar God Mode.", Color3.fromRGB(255, 0, 0))  -- Feedback vermelho (erro)
+    end
+end
+
+-- Função para ativar/desativar Modo de Voo
+function toggleFlyMode()
+    -- Implementação simples de voo (pode ser expandida)
+    local player = game.Players.LocalPlayer
+    if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+        local bodyVelocity = Instance.new("BodyVelocity")
+        bodyVelocity.MaxForce = Vector3.new(100000, 100000, 100000)
+        bodyVelocity.Velocity = Vector3.new(0, 50, 0)  -- Ajuste a direção da velocidade conforme necessário
+        bodyVelocity.Parent = player.Character.HumanoidRootPart
+        updateFeedback("Modo de voo ativado!", Color3.fromRGB(0, 255, 0))  -- Feedback verde (sucesso)
+    else
+        updateFeedback("Falha ao ativar Modo de Voo.", Color3.fromRGB(255, 0, 0))  -- Feedback vermelho (erro)
+    end
+end
+
+-- Adicionando Botões à Interface
+FinderAdmin:AddButton("Teleportar para Servidor com Administradores", function()
+    teleportToAdminServer()  -- Função de teleporte
+end)
+
+FinderAdmin:AddButton("Mudar Velocidade", function()
+    local newSpeed = 100  -- Valor de velocidade desejado
+    changeWalkSpeed(newSpeed)  -- Função para mudar velocidade
+end)
+
+FinderAdmin:AddButton("Ativar/Desativar God Mode", function()
+    toggleGodMode()  -- Função para ativar/desativar God Mode
+end)
+
+FinderAdmin:AddButton("Ativar/Desativar Modo de Voo", function()
+    toggleFlyMode()  -- Função para ativar/desativar Modo de Voo
+end)
+
+-- Função para exibir feedback ao usuário
+function FinderAdmin:GetFeedbackLabel()
+    return feedbackLabel  -- Retorna o label de feedback para ser usado nas funções
+end
+
+-- Se necessário, adicione mais funcionalidades aqui
