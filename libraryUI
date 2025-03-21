@@ -1,0 +1,44 @@
+local FinderAdmin = {}
+
+-- Criando interface principal
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = game.CoreGui
+
+-- Botão para abrir/fechar o menu
+local ToggleButton = Instance.new("TextButton")
+ToggleButton.Size = UDim2.new(0, 100, 0, 50)
+ToggleButton.Position = UDim2.new(0.9, 0, 0.1, 0)
+ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+ToggleButton.Text = "MENU"
+ToggleButton.TextScaled = true
+ToggleButton.Parent = ScreenGui
+
+-- Criando menu principal
+local MenuFrame = Instance.new("Frame")
+MenuFrame.Size = UDim2.new(0, 300, 0, 400)
+MenuFrame.Position = UDim2.new(0.5, -150, 0.5, -200)
+MenuFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MenuFrame.Visible = false
+MenuFrame.Parent = ScreenGui
+
+-- Animação de abertura/fechamento do menu
+local isOpen = false
+ToggleButton.MouseButton1Click:Connect(function()
+    isOpen = not isOpen
+    MenuFrame.Visible = isOpen
+end)
+
+-- Função para adicionar botões ao menu
+function FinderAdmin:AddButton(name, callback)
+    local Button = Instance.new("TextButton")
+    Button.Size = UDim2.new(1, -20, 0, 50)
+    Button.Position = UDim2.new(0, 10, 0, #MenuFrame:GetChildren() * 60)
+    Button.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+    Button.Text = name
+    Button.TextScaled = true
+    Button.Parent = MenuFrame
+
+    Button.MouseButton1Click:Connect(callback)
+end
+
+return FinderAdmin
